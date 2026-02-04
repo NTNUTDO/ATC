@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-TW" lang="zh-TW">
+
+<head>
+    <link href="../img/LOGO.png" rel="icon" type="image/gif" />
+    <title>ATC-DOT(Anecdotal timeline coding digital observation tool)</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="Geany 1.32" />
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- <?!= HtmlService.createHtmlOutputFromFile('style.css').getContent()?> -->
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Jquery library-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- SheetJS library-->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X3SJGR1Q8K"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-X3SJGR1Q8K');
+</script>
+
+<body>
+    <button class="infoButton" id="infoButton"><i class="fa fa-info-circle"></i></button>
+    <!-- The Modal -->
+    <div id="myModal" class="mymodal">
+        <!-- Modal content -->
+        <div class="mymodal-content">
+            <div class="mymodal-header">
+                <span class="close">&times;</span>
+                <h2>軼事記錄時間線標記數位觀課工具<br>（Anecdotal timeline coding digital observation tool）</h2>
+            </div>
+            <div class="mymodal-body">
+                <ul>
+                    <li>版本：ATC1.1</li>
+                    <li>簡介：</li>
+                    <p>本程式基於赫爾辛基大學的Miikka Turkkila研究員所開發的開源程式轉製而成1.0版，程式網址：
+                        <a href="https://bit.ly/atcdot1">https://bit.ly/atcdot1</a>，再依教師社群測試和運用結果，修改成本1.1版。
+                    </p>
+                    <li>使用說明：（可參閱此<a
+                            href="https://docs.google.com/presentation/d/10dbQjBIiBCieQrLfOdhQsaSj8JISNQ2n/edit?slide=id.p7#slide=id.p7"
+                            target="_blank">連結</a>）</li><br>
+                    <li>授權說明：</li>
+                    <p>
+                        「軼事記錄時間線標記數位觀課工具」由國立臺灣師範大學製作，以創用CC姓名標示-非商業性-相同方式分享4.0國際授權條款釋出。（<a
+                            href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hant"
+                            target="_blank">https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hant</a>）
+                    </p>
+                    <li>文獻引用：</li>
+                    <p>
+                        國立臺灣師範大學(2024)。軼事記錄時間線標記數位觀課工具(1.1版)。113年中小學教師專業發展人才培訓輔導計畫。<br>
+                        National Taiwan Normal University(2024). Anecdotal timeline coding digital observation
+                        tool(1.1version). The training and counseling plan for primary and secondary school
+                        teachersprofessional development at 2024.
+                    </p>
+                    <li>本ATC1.1數位工具，在測試與試用後，將開放開源程式。</li>
+                    <img id="logo" width="200" src="../img/LOGO.png" alt="logo" />
+                </ul>
+            </div>
+            <div class=" mymodal-footer">
+                <h4><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hant"><img
+                            alt="Creative Commons License" style="border-width:0"
+                            src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+                    計畫主持人：張民杰&emsp;程式協作：楊智翔
+                </h4>This work is licensed under a <a rel="license"
+                    href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hant">Creative Commons
+                    Attribution-NonCommercial-ShareAlike
+                    4.0 International License</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="d-flex justify-content-center pt-4">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-primary btn-lg px-4 fs-2" id="bM" value="Start"
+                    onclick="masterStartStop()">Start</button>
+            </div>
+            <div class="p-3">
+                <span class="fs-2" id="MasterTime">00:00</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-secondary btn-lg px-4 fs-2" onclick="ticker.clear();"
+                    id="resetStop">Reset</button>
+            </div>
+        </div>
+        <hr>
+        <div class="d-flex row justify-content-center" id="divText">
+            <div class="d-flex row justify-content-center">
+                <div class="col-auto">
+                    <button id="startRecord" class="btn btn-success fs-4 mb-2 disabled"
+                        onclick="startRecord()">輸入</button>
+                </div>
+                <div class="col-auto">
+                    <button id="inserTime" class="btn btn-info fs-4 mb-2 disabled" onclick="inserTime()">插入時間標記</button>
+                </div>
+                <div class="col-auto"> <button id="sendRecord" class="btn btn-danger fs-4 mb-2 disabled"
+                        onclick="sendRecord()">送出</button>
+                </div>
+            </div>
+            <textarea id="recordText" class="col-8" disabled="true" placeholder="點擊「輸入」後開始記錄..."></textarea>
+        </div>
+
+        <div id="divRecordTime" class="d-flex row justify-content-center">
+            <span class="col-auto fs-2">記錄時間</span>
+            <span class="col-auto fs-2" id="recordTime">00:00:00</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-center align-items-center py-2 flex-wrap btn-group">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-secondary m-1 fs-4 " onclick="createTimeline()">Show timeline</button>
+            </div>
+            <div class="form-floating m-1" id="input-group">
+                <input class="form-control" type="text" id="filename" placeholder="Filename">
+                <label for="filename">Filename</label>
+            </div>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-secondary m-1 fs-4 " onclick="saveTimeline()">Save as image</button>
+            </div>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-secondary m-1 fs-4 " onclick="getData()"><i class="fa fa-download"></i> Download
+                    xlsx-file</button>
+            </div>
+        </div>
+        <br>
+        <div id="divTimeline" class="d-flex justify-content-center mb-2">
+        </div>
+        <br>
+        <div id="divTable" class="row justify-content-center">
+        </div>
+    </div>
+    <br>
+
+    <!-- <?!= HtmlService.createHtmlOutputFromFile('timerATC.js').getContent()?>
+    <?!= HtmlService.createHtmlOutputFromFile('timeline.js').getContent()?> -->
+    <script src="graph.js"></script>
+    <script src="atc.js"></script>
+
+</body>
+
+</html>
